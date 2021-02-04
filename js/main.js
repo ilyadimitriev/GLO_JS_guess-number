@@ -10,7 +10,7 @@ function createRandom(minInt, maxInt) {
     const mathMagic = function() {
         randInt = Math.floor(minInt + Math.random() * (maxInt + 1 - minInt));
         return randInt;
-    }
+    };
     return mathMagic;
 }
 
@@ -20,7 +20,7 @@ function createCounter(x) {
     const myFunction = function() {
         counter -= 1;
         return counter;
-    }
+    };
     return myFunction;
 }
 
@@ -29,14 +29,16 @@ function startGame() {
     let getRandom = createRandom(1, 100);
     //Запоминаем загаданное число
     let randInt = getRandom();
+    //Подсказка для тестирования
+    console.log(randInt);
     // Задаем количество попыток
     let decrement = createCounter(10);
     // Запоминаем количество попыток
     let attempts;
+    // Сюда будет записан true или false для прешения, продолжать ли игру
+    let result;
 
-    function getData() {
-        //Подсказка для тестирования
-        console.log(randInt);
+    function checkGuess() {
         let guess = prompt('Угадай число от 1 до 100');
         // Если отказались вводить число, то
         if (guess === null) {
@@ -47,7 +49,7 @@ function startGame() {
         // Проверяем корректность ввода
         else if (!isNumber(guess)) {
             alert('Введи число!');
-            getData();
+            checkGuess();
         }
         // Если корректно, то сравниваем.
         // Если больше, то
@@ -56,37 +58,37 @@ function startGame() {
             attempts = decrement();
             // Если попытки закончились
             if (attempts === 0) {
-                let result = confirm('Загаданное число меньше. Попытки закончились, хотите сыграть еще?');
+                result = confirm('Загаданное число меньше. Попытки закончились, хотите сыграть еще?');
                 // Возвращаем true либо false
                 return result;
             }
             // Если попытки еще есть, то даем подсказку и проверяем заново
             alert('Загаданное число меньше, осталось попыток: ' + attempts);
-            getData();
+            checkGuess();
         }
         // Если меньше, то
         else if (+guess < randInt) {
             // Уменьшаем число попыток
             attempts = decrement();
             if (attempts === 0) {
-                let result = confirm('Загаданное число больше. Попытки закончились, хотите сыграть еще?');
+                result = confirm('Загаданное число больше. Попытки закончились, хотите сыграть еще?');
                 // Возвращаем true либо false
                 return result;
             }
             // Если попытки еще есть, то даем подсказку и проверяем заново
             alert('Загаданное число больше, осталось попыток: ' + attempts);
-            getData();
+            checkGuess();
         }
         // Если угадали, то
         else {
-            let result = confirm('Поздравляю, Вы угадали!!! Хотели бы сыграть еще?');
+            result = confirm('Поздравляю, Вы угадали!!! Хотели бы сыграть еще?');
             // Возвращаем true либо false
             return result;
         }
-    }
-    // Запускаем игру
+    }// Запускаем игру
+    checkGuess();
     // Если решили сыграть еще, то
-    if (getData() === true) {
+    if (result === true) {
         // Начинаем новую игру
         startGame();
     }
@@ -98,5 +100,3 @@ function startGame() {
 }
 
 startGame();
-
-
