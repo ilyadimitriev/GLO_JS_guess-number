@@ -14,11 +14,25 @@ function createRandom(minInt, maxInt) {
     return mathMagic;
 }
 
+// Счетчик оставшихся попыток
+function createCounter(x) {
+    let counter = x;
+    const myFunction = function() {
+        counter -= 1;
+        return counter;
+    }
+    return myFunction;
+}
+
 function startGame() {
     //Задаем рамки для загадываемого числа
     let getRandom = createRandom(1, 100);
     //Запоминаем загаданное число
     let randInt = getRandom();
+    // Задаем количество попыток
+    let decrement = createCounter(10);
+    // Запоминаем количество попыток
+    let attempts;
 
     function getData() {
         //Подсказка для тестирования
@@ -38,26 +52,51 @@ function startGame() {
         // Если корректно, то сравниваем.
         // Если больше, то
         else if (+guess > randInt) {
-            alert('Загаданное число меньше');
-            // Даем подсказку и проверяем заново
+            // Уменьшаем число попыток
+            attempts = decrement();
+            // Если попытки закончились
+            if (attempts === 0) {
+                let result = confirm('Загаданное число меньше. Попытки закончились, хотите сыграть еще?');
+                // Возвращаем true либо false
+                return result;
+            }
+            // Если попытки еще есть, то даем подсказку и проверяем заново
+            alert('Загаданное число меньше, осталось попыток: ' + attempts);
             getData();
         }
         // Если меньше, то
         else if (+guess < randInt) {
-            alert('Загаданное число больше');
-            // Даем подсказку и проверяем заново
+            // Уменьшаем число попыток
+            attempts = decrement();
+            if (attempts === 0) {
+                let result = confirm('Загаданное число больше. Попытки закончились, хотите сыграть еще?');
+                // Возвращаем true либо false
+                return result;
+            }
+            // Если попытки еще есть, то даем подсказку и проверяем заново
+            alert('Загаданное число больше, осталось попыток: ' + attempts);
             getData();
         }
         // Если угадали, то
         else {
-            alert('Поздравляю, Вы угадали!!!');
-            // Выходим из игры
-            return false;
+            let result = confirm('Поздравляю, Вы угадали!!! Хотели бы сыграть еще?');
+            // Возвращаем true либо false
+            return result;
         }
     }
     // Запускаем игру
-    getData();
+    // Если решили сыграть еще, то
+    if (getData() === true) {
+        // Начинаем новую игру
+        startGame();
+    }
+    // Если отказались начать заново, то
+    else {
+        // Выходим из игры
+        return false;
+    }
 }
 
 startGame();
+
 
